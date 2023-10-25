@@ -16,7 +16,7 @@ public class BusStop {
 
     public static void main(String[] args) {
 
-        // no of inputs from users
+        // no of inputs from usersa
         int n = args.length;
         int buses [] = new int[n-1];
         for (int i = 0; i < n-1; i++){
