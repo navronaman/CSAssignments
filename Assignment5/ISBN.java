@@ -29,6 +29,14 @@ public class ISBN {
      * @return Return an integer array with complete 10-digit ISBN number.
      */
     public static void calculateISBN10(int[] isbn) {
+        int sumofp = 0;
+        for (int i = 0; i<isbn.length-1; i++){
+            sumofp = ((10-i) * isbn[i]) + sumofp;
+        }
+        int rem = sumofp%11;
+        int diff = 11 - rem;
+        int check = diff%11;
+        isbn[isbn.length-1] = check;
 
         /* WRITE YOUR CODE HERE */
 
@@ -43,9 +51,36 @@ public class ISBN {
      * @return Return an integer array with complete 13-digit ISBN number.
      */
     public static int[] calculateISBN13(int[] shortIsbn) {
+        int[] isbn_13 = new int[13];
+        isbn_13[0] = 9;
+        isbn_13[1] = 7;
+        isbn_13[2] = 8;
+        for (int i = 0; i<shortIsbn.length; i++){
+            isbn_13[i+3] = shortIsbn[i];
+        }
+        int sumofp = 0;
+        for (int i = 0; i<isbn_13.length; i++){
+            if (i%2 == 0){
+                sumofp = (isbn_13[i]) + sumofp;
+            }
+            else if (i%2 == 1){
+                sumofp = (3*isbn_13[i]) + sumofp;
+            }
+        }
+        int rem = sumofp%10;
+        int check = 0;
+        if (rem!=0){
+            check = 10 - rem;
+        }
+        else{
+            check = 0;
+        }
+        isbn_13[isbn_13.length-1] = check;
+
 
         /* WRITE YOUR CODE HERE */
 
+        return isbn_13;
     }
 
 
