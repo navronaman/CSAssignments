@@ -134,8 +134,15 @@ public class Communities {
     public static double findAverageLifeExpectancy(double[][] data) {
         
         // WRITE YOUR CODE HERE
+        // HLT_LIFE_EXPECT = 18
+        double sum = 0;
+        for (int i = 0; i<data.length; i++){
+            sum = sum + data[i][HLT_LIFE_EXPECT];
+        }
+        double avg = sum/data.length;
+
         
-        return 0.0; // replace this line
+        return avg; // replace this line
     }
 
 
@@ -153,9 +160,31 @@ public class Communities {
      */
     public static double highestPopulationWithHealthIssue (double[][] data, char healthIssue) {
 
-         // WRITE YOUR CODE HERE
+        // finds highest community
+        // returns numbers of cases
+        int index = 0;
+        if (healthIssue=='A'){
+            index = HLT_ASTHMA;
+        }
+        else if (healthIssue=='D'){
+            index = HLT_DIABETES;
+        }
+        else if (healthIssue=='H'){
+            index = HLT_HEART_DISEASE;
+        }
+        else {
+            index = HLT_ASTHMA;
+        }
+
+        double[] max_comm = data[0];
         
-        return 0.0; // replace this line
+        for (int i = 0; i<data.length; i++){
+            if (data[i][index] > max_comm[index]){
+                max_comm = data[i];
+            }
+        }
+        
+        return max_comm[index]; // replace this line
     }
 
     /*
@@ -172,9 +201,21 @@ public class Communities {
      */
     public static int numberOfCommunities (double[][] data, int columnIndex, double percentageThreshold, boolean isDisadvantage) {
 
-         // WRITE YOUR CODE HERE
+        int count = 0;
+        for (int i = 0; i<data.length; i++){
+            if (isDisadvantage==true){
+                if (data[i][columnIndex]*100 >= percentageThreshold && data[i][ECON_DISADVANTAGED]==1){
+                    count = count + 1;
+                }
+            }
+            else if (isDisadvantage==false){
+                if (data[i][columnIndex]*100 >= percentageThreshold && data[i][ECON_DISADVANTAGED]==0){
+                    count = count + 1;
+                }
+            }
+        }
 
-        return 0; replace this line
+        return count; //replace this line
     }
 
     /*
@@ -189,9 +230,17 @@ public class Communities {
      */
     public static double largestRacialDemographic(double[][] data, int community) {
 
-        // WRITE YOUR CODE HERE
+        double current_max = data[community][0];
 
-        return 0.0; // replace this line
+        for (int j = 0; j<=7; j++){
+            if (data[community][j] > current_max){
+                current_max = data[community][j];
+            }
+        }
+
+        double large = current_max*100;
+
+        return large; // replace this line
     }
 
     /*
@@ -204,10 +253,21 @@ public class Communities {
      * @return     row index of the community.
      */
     public static int mostPopulatedDisadvantagedWithLowIncome(double[][] data) {
-        
-        // WRITE YOUR CODE HERE
+                
+        // return community row index
 
-        return 0.0; // replace this line
+        int comm_pop_index = 0;
+        double max_pop = data[0][TOTAL_POPULATION];
+
+        for (int i = 0; i<data.length; i++){
+            if (data[i][ECON_DISADVANTAGED]==1 && data[i][ECON_LOW_INCOME]==1 && data[i][TOTAL_POPULATION]>max_pop){
+                max_pop = data[i][TOTAL_POPULATION];
+                comm_pop_index = i;
+            }
+
+        }
+
+        return comm_pop_index; // replace this line
     }
 
 
