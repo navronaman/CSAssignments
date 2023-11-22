@@ -74,7 +74,25 @@ public class DNA {
 
         StdIn.setFile(filename); // DO NOT remove this line, keep it as the first line in the method.
 
-        /* WRITE YOUR CODE HERE */
+        String firstline = StdIn.readLine();
+        int p = Integer.parseInt(firstline);
+
+        Profile[] database = new Profile[p];
+        String[][] database2 = new String[p][3];
+
+        for (int i = 0; i<p; i++){
+            String name = StdIn.readLine();
+            String sequence1 = StdIn.readLine();
+            String sequence2 = StdIn.readLine();
+
+            database2[i][0] = name;
+            database2[i][1] = sequence1;
+            database2[i][2] = sequence2;
+
+            Profile profilei = new Profile(name, null, null, sequence1, sequence2);
+            database[i] = profilei;
+
+        }
 
     }
 
