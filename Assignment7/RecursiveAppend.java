@@ -12,8 +12,11 @@ public class RecursiveAppend {
      * This method does not print ANYTHING
      */
     public static String appendNTimes (String original, int n) {
+        if (n==0){
+            return original;
+        }
 
-	// WRITE YOUR CODE HERE
+        return original + appendNTimes(original, n-1);
     }
 
     /*
