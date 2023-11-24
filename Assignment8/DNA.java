@@ -242,6 +242,23 @@ public class DNA {
      */
     public boolean identicalSTRs ( STR[] s1, STR[] s2 ) {
 
+        if (s1.length!=s2.length){
+            return false;
+        }
+
+        int n = s1.length;
+        for (int i = 0; i<n; i++){
+            String tempstr1 = s1[i].getSTR();
+            String tempstr2 = s2[i].getSTR();
+            int tempnor1 = s1[i].getRepeats();
+            int tempnor2 = s2[i].getRepeats();
+
+            if (tempnor1!=tempnor2 || (tempstr1.equals(tempstr2))==false){
+                return false;
+            }
+
+        }
+
         /* WRITE YOUR CODE HERE */
 
         return true; // update the return value
