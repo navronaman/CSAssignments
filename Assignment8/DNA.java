@@ -77,17 +77,17 @@ public class DNA {
         String firstline = StdIn.readLine();
         int p = Integer.parseInt(firstline);
 
-        Profile[] database = new Profile[p];
-        String[][] database2 = new String[p][3];
+        database = new Profile[p];
+        // String[][] database2 = new String[p][3];
 
         for (int i = 0; i<p; i++){
             String name = StdIn.readLine();
             String sequence1 = StdIn.readLine();
             String sequence2 = StdIn.readLine();
 
-            database2[i][0] = name;
-            database2[i][1] = sequence1;
-            database2[i][2] = sequence2;
+            // database2[i][0] = name;
+            // database2[i][1] = sequence1;
+            // database2[i][2] = sequence2;
 
             Profile profilei = new Profile(name, null, null, sequence1, sequence2);
             database[i] = profilei;
@@ -117,7 +117,12 @@ public class DNA {
 
         StdIn.setFile(filename); // DO NOT remove this line, keep as the first line in the method.
 
-        /* WRITE YOUR CODE HERE */
+        String firstline = StdIn.readLine();
+        int n = Integer.parseInt(firstline);
+
+        for (int str = 0; str<n; str++){
+            STRsOfInterest[str] = StdIn.readLine();
+        }
 
     }
 
@@ -139,12 +144,18 @@ public class DNA {
      */
     public Profile createUnknownProfile ( String filename ) {
 
-	StdIn.setFile(filename); // DO NOT remove this line, keep as the first line in the method.
+	    StdIn.setFile(filename); // DO NOT remove this line, keep as the first line in the method.
 
-	/* WRITE YOUR CODE HERE */
+        String[] temp = new String[2];
 
+        for (int i = 0; i<2; i++){
+            String tmp = StdIn.readLine();
+            temp[i] = tmp;
+        }
 
-        return null; // update the return value
+        Profile Unknown = new Profile("Unknown", null, null, temp[0], temp[1]);
+
+        return Unknown; // update the return value
     }
 
     /**
@@ -157,10 +168,20 @@ public class DNA {
      * @return         The STR object with the name and longest number of repeats
      */
     public STR findSTRInSequence ( String sequence, String STR ) {
+        int nor = 0;
 
-        /* WRITE YOUR CODE HERE */
+        int n = STR.length();
 
-        return null; // update the return value
+        for (int i = 0; i<sequence.length()-n+1; i++){
+            String temp = sequence.substring(i, i+n);
+            if(STR.equals(temp)){
+                nor++;
+            }
+        }
+
+        STR newSTR = new STR(STR, nor);
+
+        return newSTR; // update the return value
     }
 
     /**
@@ -173,7 +194,11 @@ public class DNA {
      */
     public void createProfileSTRs ( Profile profile, String[] allSTRs ) {
 
-        /* WRITE YOUR CODE HERE */
+
+
+
+        profile.setS1_STRs(null);
+        profile.setS2_STRs(null);
 
     }
 
