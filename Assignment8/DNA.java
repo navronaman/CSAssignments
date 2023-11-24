@@ -217,6 +217,10 @@ public class DNA {
      */
     public void createDatabaseSTRs() {
 
+        for (int i = 0; i<database.length; i++){
+            createProfileSTRs(database[i], STRsOfInterest);;
+        }
+
         /* WRITE YOUR CODE HERE */
 
     }
