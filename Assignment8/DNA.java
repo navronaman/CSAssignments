@@ -192,13 +192,23 @@ public class DNA {
      * @param profile The profile of the that the method will compute the STRs array for
      * @param allSTRs The list of STRs to be looked for in the profiles DNA sequences
      */
-    public void createProfileSTRs ( Profile profile, String[] allSTRs ) {
+    public void createProfileSTRs ( Profile profile, String[] allSTRs ) {    
+        
+        String sequence1 = profile.getSequence1();
+        String sequence2 = profile.getSequence2();
 
+        int n = allSTRs.length;
+        
+        STR[] S1_STRs = new STR[n];
+        STR[] S2_STRs = new STR[n];
 
+        for (int i = 0; i<n; i++){
+            S1_STRs[i] = findSTRInSequence(sequence1, allSTRs[i]);
+            S2_STRs[i] = findSTRInSequence(sequence2, allSTRs[i]);                        
+        }
 
-
-        profile.setS1_STRs(null);
-        profile.setS2_STRs(null);
+        profile.setS1_STRs(S1_STRs);
+        profile.setS2_STRs(S2_STRs);
 
     }
 
