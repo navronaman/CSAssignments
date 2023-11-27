@@ -120,6 +120,8 @@ public class DNA {
         String firstline = StdIn.readLine();
         int n = Integer.parseInt(firstline);
 
+        STRsOfInterest = new String[n];
+
         for (int str = 0; str<n; str++){
             STRsOfInterest[str] = StdIn.readLine();
         }
@@ -253,13 +255,11 @@ public class DNA {
             int tempnor1 = s1[i].getRepeats();
             int tempnor2 = s2[i].getRepeats();
 
-            if (tempnor1!=tempnor2 || (tempstr1.equals(tempstr2))==false){
+            if (!(tempnor1==tempnor2 && tempstr1.equals(tempstr2))){
                 return false;
             }
 
         }
-
-        /* WRITE YOUR CODE HERE */
 
         return true; // update the return value
     }
