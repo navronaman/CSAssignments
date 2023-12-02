@@ -59,8 +59,40 @@ public class StopAndFrisk {
         StdIn.setFile(csvFile); // Opens the file
         StdIn.readLine();       // Reads and discards the header line
 
-        // WRITE YOUR CODE HERE
+        // how do we know how many lines in the files
+        while(StdIn.hasNextLine()){
 
+            String[] recordEntries = StdIn.readLine().split(","); // splits the line into different things
+
+            int year = recordEntries[0]; // part of SFY or database[i]
+
+            String description = recordEntries[2]; // part of SFR
+
+            String gender = recordEntries[52]; // part of SFR
+
+            String race = recordEntries[66]; // part of SFR
+
+            String location = recordEntries[71]; // part of SFR
+
+            Boolean arrested = recordEntries[13].equals(“Y”); // part of SFR
+
+            Boolean frisked = recordEntries[16].equals(“Y”); // part of SFR
+
+            SFRecord newSFR = new SFRecord(description, arrested, frisked, gender, race, location);
+
+            for (int i = 0; i<database.size(); i++){
+                if (year==database[i].getcurrentYear){
+                    database[i].addRecord(newSFR);
+                }
+                else {
+                    SFYear newSFY = new SFYear(year);
+                    newSFY.addRecord(newSFR);
+                    database.add(newSFY);
+                }
+            }
+
+            }
+        
     }
 
     /**
@@ -75,7 +107,7 @@ public class StopAndFrisk {
 
     public ArrayList<SFRecord> populationStopped ( int year, String race ) {
 
-        // WRITE YOUR CODE HERE
+        
 
     }
 
