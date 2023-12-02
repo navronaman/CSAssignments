@@ -106,7 +106,6 @@ public class StopAndFrisk {
      */
 
     public ArrayList<SFRecord> populationStopped ( int year, String race ) {
-
         ArrayList<SFRecord> racey = new ArrayList<>();
 
         for (int i = 0; i<database.size(); i++){
@@ -126,7 +125,31 @@ public class StopAndFrisk {
 
         return racey;
 
+        /*
+
+        ArrayList<SFRecord> racey = new ArrayList<>();
+
+        for (int i = 0; i<database.size(); i++){
+            int tempy = database.get(i).getcurrentYear();
+            // checks if the year matches with the user inputted year
+            if (tempy==year){
+                for (int j = 0; j<database.get(i).getRecordsForYear().size(); j++){
+                    String tempr = database.get(i).getRecordsForYear().get(j).getRace();
+                    // checks if the race is the same
+                    if (tempr.equals(race)){
+                        // add the object to the arraylist
+                        racey.add(database.get(i).getRecordsForYear().get(j));
+                    }
+                }
+            }
+        }
+
+        return racey;
+        */
+
     }
+
+
 
     /**
      * This method computes the percentage of records where the person was frisked and the
@@ -235,12 +258,48 @@ public class StopAndFrisk {
      * @param year2 second year to compare.
      * @return 
      */
+    
+    private boolean inDatabase(int year){
+        for (int i = 0; i<database.size(); i++){
+            if (database.get(i).getcurrentYear()==year){
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public double crimeIncrease ( String crimeDescription, int year1, int year2 ) {
-        
-        // WRITE YOUR CODE HERE
 
-	return 0.0; // update the return value
+        // checking if both years are in database
+
+        if (year1==year2 | !(inDatabase(year1)) | !(inDatabase(year2))){
+            return 0.0;
+        }
+
+        int countIn1 = 0;
+        int countIn2 = 0;
+        
+        for(int i = 0; i<database.size(); i++){
+            if (database.get(i).getcurrentYear()==year1){
+                for (int j = 0; i<database.get(i).getRecordsForYear().size(); j++){
+                    if(database.get(i).getRecordsForYear().get(j).getDescription().indexOf(crimeDescription) != -1){
+                        countIn1++;
+                    }
+                }
+            }
+            if (database.get(i).getcurrentYear()==year2){
+                for (int k = 0; k<database.get(i).getRecordsForYear().size(); k++){
+                    if(database.get(i).getRecordsForYear().get(k).getDescription().indexOf(crimeDescription) != -1){
+                        countIn2++;
+                    }
+                }
+            }
+        }
+
+        double percent = 100.0*(countIn2-countIn1)/countIn1;
+
+	    return percent; // update the return value
     }
 
     /**
@@ -254,9 +313,29 @@ public class StopAndFrisk {
      */
     public String mostCommonBorough ( int year ) {
 
-        // WRITE YOUR CODE HERE
+        String borough[] = {"Brooklyn", "Manhattan", "Bronx", "Queens", "Staten Island"};
+        int counts[] = new int[5];
 
-        return null; // update the return value
+        for (int i = 0; i<database.size(); i++){
+            if (database.get(i).getcurrentYear()==year){
+                for (int j = 0; j<database.get(i).getRecordsForYear().size(); j++){
+                    for (int k = 0; k<borough.length; k++){
+                        if (database.get(i).getRecordsForYear().get(j).getLocation().equalsIgnoreCase(borough[k])){
+                            counts[k] = counts[k] + 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        int maxIndex = 0;
+        for (int i = 0; i<counts.length; i++){
+            if (counts[i]>counts[maxIndex]){
+                maxIndex = i;
+            }
+        }
+
+        return borough[maxIndex]; // update the return value
     }
 
 }
