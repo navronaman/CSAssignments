@@ -74,12 +74,12 @@ public class DNA {
 
         StdIn.setFile(filename); // DO NOT remove this line, keep it as the first line in the method.
 
-        int p = Integer.parseInt(StdIn.readLine());
+        int p = Integer.parseInt(StdIn.readLine()); // casts the first line as an integer
 
-        database = new Profile[p];
+        database = new Profile[p]; // updates the size of profiles array with the p
         // String[][] database2 = new String[p][3];
 
-        for (int i = 0; i<p; i++){
+        for (int i = 0; i<p; i++){ // updates the profiles array with profiles
             String name = StdIn.readLine();
             String sequence1 = StdIn.readLine();
             String sequence2 = StdIn.readLine();
@@ -88,7 +88,7 @@ public class DNA {
             // database2[i][1] = sequence1;
             // database2[i][2] = sequence2;
 
-            Profile profilei = new Profile(name, null, null, sequence1, sequence2);
+            Profile profilei = new Profile(name, null, null, sequence1, sequence2); // stores the profile in the array
             database[i] = profilei;
 
         }
@@ -116,12 +116,12 @@ public class DNA {
 
         StdIn.setFile(filename); // DO NOT remove this line, keep as the first line in the method.
 
-        String firstline = StdIn.readLine();
-        int n = Integer.parseInt(firstline);
+        String firstline = StdIn.readLine(); // gets the firstline
+        int n = Integer.parseInt(firstline); // casts to an integer
 
-        STRsOfInterest = new String[n];
+        STRsOfInterest = new String[n]; // updates the size of the string array
 
-        for (int str = 0; str<n; str++){
+        for (int str = 0; str<n; str++){ // updates the string array
             STRsOfInterest[str] = StdIn.readLine();
         }
 
@@ -147,10 +147,10 @@ public class DNA {
 
 	    StdIn.setFile(filename); // DO NOT remove this line, keep as the first line in the method.
 
-        String sequence1 = StdIn.readLine();
-        String sequence2 = StdIn.readLine();
+        String sequence1 = StdIn.readLine(); // since each profile only have 2 sequences, we only the first two lines
+        String sequence2 = StdIn.readLine(); 
 
-        Profile Unknown = new Profile("Unknown", null, null, sequence1, sequence2);
+        Profile Unknown = new Profile("Unknown", null, null, sequence1, sequence2); // new profile with nulls for ST_STRs
 
         return Unknown; // update the return value
     }
@@ -165,46 +165,30 @@ public class DNA {
      * @return         The STR object with the name and longest number of repeats
      */
     public STR findSTRInSequence ( String sequence, String STR ) {
-        /*
-        int nor = 0;
-
-        int n = STR.length();
-
-        for (int i = 0; i<sequence.length()-n+1; i++){
-            String temp = sequence.substring(i, i+n);
-            if(STR.equals(temp)){
-                nor++;
-            }
-        }
-
-        STR newSTR = new STR(STR, nor);
-
-        return newSTR; // update the return value
-        */
-
-        int nor = 0;
-        int mr = 0;
+        
+        int nor = 0; // number of consecutive repeats
+        int mr = 0; // number of maximum consecutive repeats
 
         int n = STR.length(); // usually 3 or 4
 
-        for (int i = 0; i<sequence.length(); i++){
-            if (sequence.startsWith(STR, i)){
-                nor++;
-                i = n - 1 + i;
+        for (int i = 0; i<sequence.length(); i++){ // go through the sequence
+            if (sequence.startsWith(STR, i)){ // startswith compares the first n letter from STR and sequence [starting from i]
+                nor++; // if this is true, we add 1 to nor
+                i = n - 1 + i; // now we shift the index from i to i+2 or i+3 
             }
             else{
-                if (nor>mr){
+                if (nor>mr){ // after 2-3 times the first if block is true, we update the max repeats
                     mr = nor;
                 }
-            nor = 0;
+            nor = 0; // nor becomes zero everytime the if block is false, so we can run the procedure again
             }
         }
 
-        if (nor>mr){
+        if (nor>mr){ // a check, just in case
             mr = nor;
         }
 
-        STR newSTR = new STR(STR, mr);
+        STR newSTR = new STR(STR, mr); // creating a new STR
 
         return newSTR;
 
@@ -219,22 +203,25 @@ public class DNA {
      * @param profile The profile of the that the method will compute the STRs array for
      * @param allSTRs The list of STRs to be looked for in the profiles DNA sequences
      */
-    public void createProfileSTRs ( Profile profile, String[] allSTRs ) {    
+    public void createProfileSTRs ( Profile profile, String[] allSTRs ) {
+        // our profile has name, "Jake", sequence1, sequence2
+        // allSTRs is an array of STRs like "AGAT", "CACA", etc
+        // our job is to update the null values, calculate STR_S1 and STR_S2    
         
-        String sequence1 = profile.getSequence1();
-        String sequence2 = profile.getSequence2();
+        String sequence1 = profile.getSequence1(); //get seq1
+        String sequence2 = profile.getSequence2(); //get seq2
 
-        int n = allSTRs.length;
+        int n = allSTRs.length; 
         
-        STR[] S1_STRs = new STR[n];
+        STR[] S1_STRs = new STR[n]; // we're gonna use these STR arrays to update the profile
         STR[] S2_STRs = new STR[n];
 
         for (int i = 0; i<n; i++){
-            S1_STRs[i] = findSTRInSequence(sequence1, allSTRs[i]);
-            S2_STRs[i] = findSTRInSequence(sequence2, allSTRs[i]);                        
+            S1_STRs[i] = findSTRInSequence(sequence1, allSTRs[i]); // use the method to generate STRs for sequence1
+            S2_STRs[i] = findSTRInSequence(sequence2, allSTRs[i]); // same for sequence2                   
         }
 
-        profile.setS1_STRs(S1_STRs);
+        profile.setS1_STRs(S1_STRs); //update the profiles
         profile.setS2_STRs(S2_STRs);
 
     }
@@ -244,11 +231,11 @@ public class DNA {
      */
     public void createDatabaseSTRs() {
 
+        // we just update all the profiles of the database to have S1_STRs and S2_STRs
         for (int i = 0; i<database.length; i++){
             createProfileSTRs(database[i], STRsOfInterest);
         }
 
-        /* WRITE YOUR CODE HERE */
 
     }
     
@@ -269,24 +256,26 @@ public class DNA {
      */
     public boolean identicalSTRs ( STR[] s1, STR[] s2 ) {
 
+        // if the arrays don't have the sem length, or they're null, default false
         if (s1.length!=s2.length || s1==null || s2==null){
             return false;
         }
 
-        int n = s1.length;
+        int n = s1.length; // assuming they both have same length
+        // STR has two things, int and STR and we'll compare both of them for each STR in the array
         for (int i = 0; i<n; i++){
-            String tempstr1 = s1[i].getSTR();
+            String tempstr1 = s1[i].getSTR(); // temp strings from STR[i]
             String tempstr2 = s2[i].getSTR();
-            int tempnor1 = s1[i].getRepeats();
+            int tempnor1 = s1[i].getRepeats(); // temp integers from STR[i]
             int tempnor2 = s2[i].getRepeats();
 
-            if (!(tempnor1==tempnor2 && tempstr1.equals(tempstr2))){
+            if (!(tempnor1==tempnor2 && tempstr1.equals(tempstr2))){ // if not true
                 return false;
             }
 
         }
 
-        return true; // update the return value
+        return true; 
     }
 
     /**
@@ -304,14 +293,14 @@ public class DNA {
         ArrayList<Profile> alp = new ArrayList<>();
 
         for (int i = 0; i<database.length; i++){
-            STR [] tempS1_STRs = database[i].getS1_STRs();
-            if (identicalSTRs(tempS1_STRs, unknownProfileS1_STRs)){
+            STR [] tempS1_STRs = database[i].getS1_STRs(); // we get S1_STRs from the profile database[i]
+            if (identicalSTRs(tempS1_STRs, unknownProfileS1_STRs)){ // we compare them, if true add
                 alp.add(database[i]);
             }
             
         }
 
-	return alp; // update the return value
+	return alp; 
     }
 
     /**
@@ -358,9 +347,10 @@ public class DNA {
      *                 other parent passed down
      * @return Returns the array of profiles that are related
      */
-    public ArrayList<Profile> findPossibleParents ( STR[] S1_STRs, STR[] S2_STRs ) { // S1-STRs and S2_STRs are the inherited from first parent and inherited from second parent
+    public ArrayList<Profile> findPossibleParents ( STR[] S1_STRs, STR[] S2_STRs ) { 
 
-        /* FIX THIS METHOD */
+        // S1-STRs and S2_STRs are the inherited from first parent and inherited from second parent
+        // 😭😭😭
 
          ArrayList<Profile> possibleParent1 = new ArrayList<>();
          ArrayList<Profile> possibleParent2 = new ArrayList<>();
@@ -369,23 +359,22 @@ public class DNA {
 
             // green checkmark is parent2 and yellow checkmark is parent1
 
-            // S1 and S1 is parent 1?
+            // S1 and S1 is parent 1? no maybe parent2
             if (identicalSTRs(database[i].getS1_STRs(), S1_STRs)) {
                 possibleParent2.add(database[i]);
             }
 
-            // S1 and S2 (top right) is parent 2 [green checkmark] (25)
-            // if child
+            // S1 and S2 (bottom left) is parent 1 [yellow mark] (20)
             if (identicalSTRs(database[i].getS1_STRs(), S2_STRs)) {
                 possibleParent1.add(database[i]);
              }
 
-             // S1 and S2 (bottom left) is parent 1 [yellow mark] (20)
+            // S1 and S2 (top right) is parent 2 [green checkmark] (25)
              if (identicalSTRs(database[i].getS2_STRs(), S1_STRs)) {
                 possibleParent2.add(database[i]);
              }
 
-             // S2 and S2 is parent 2?
+             // S2 and S2 is parent 2? well no they're parent 1 now
              if (identicalSTRs(database[i].getS2_STRs(), S2_STRs)) {
                 possibleParent1.add(database[i]);
              }
