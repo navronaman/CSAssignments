@@ -107,7 +107,24 @@ public class StopAndFrisk {
 
     public ArrayList<SFRecord> populationStopped ( int year, String race ) {
 
-        
+        ArrayList<SFRecord> racey = new ArrayList<>();
+
+        for (int i = 0; i<database.size(); i++){
+            int tempy = database[i].getcurrentYear;
+            // checks if the year matches with the user inputted year
+            if (tempy==year){
+                for (int j = 0; j<database[i].size(); j++){
+                    String tempr = database[i][j].getRace;
+                    // checks if the race is the same
+                    if (tempr.equals(race)){
+                        // add the object to the arraylist
+                        racey.add(database[i][j]);
+                    }
+                }
+            }
+        }
+
+        return racey;
 
     }
 
@@ -121,7 +138,7 @@ public class StopAndFrisk {
      */
     public double[] friskedVSArrested ( int year ) {
         
-        // WRITE YOUR CODE HERE
+        
 
         return null; // update the return value
     }
