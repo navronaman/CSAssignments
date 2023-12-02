@@ -64,7 +64,7 @@ public class StopAndFrisk {
 
             String[] recordEntries = StdIn.readLine().split(","); // splits the line into different things
 
-            int year = recordEntries[0]; // part of SFY or database[i]
+            int year = Integer.parseInt(recordEntries[0]); // part of SFY or database[i]
 
             String description = recordEntries[2]; // part of SFR
 
@@ -74,15 +74,15 @@ public class StopAndFrisk {
 
             String location = recordEntries[71]; // part of SFR
 
-            Boolean arrested = recordEntries[13].equals(“Y”); // part of SFR
+            Boolean arrested = recordEntries[13].equals("Y"); // part of SFR
 
-            Boolean frisked = recordEntries[16].equals(“Y”); // part of SFR
+            Boolean frisked = recordEntries[16].equals("Y"); // part of SFR
 
             SFRecord newSFR = new SFRecord(description, arrested, frisked, gender, race, location);
 
             for (int i = 0; i<database.size(); i++){
-                if (year==database[i].getcurrentYear){
-                    database[i].addRecord(newSFR);
+                if (year==database.get(i).getcurrentYear()){
+                    database.get(i).addRecord(newSFR);
                 }
                 else {
                     SFYear newSFY = new SFYear(year);
@@ -110,15 +110,15 @@ public class StopAndFrisk {
         ArrayList<SFRecord> racey = new ArrayList<>();
 
         for (int i = 0; i<database.size(); i++){
-            int tempy = database[i].getcurrentYear;
+            int tempy = database.get(i).getcurrentYear();
             // checks if the year matches with the user inputted year
             if (tempy==year){
-                for (int j = 0; j<database[i].size(); j++){
-                    String tempr = database[i][j].getRace;
+                for (int j = 0; j<database.get(i).getRecordsForYear().size(); j++){
+                    String tempr = database.get(i).getRecordsForYear().get(j).getRace();
                     // checks if the race is the same
                     if (tempr.equals(race)){
                         // add the object to the arraylist
-                        racey.add(database[i][j]);
+                        racey.add(database.get(i).getRecordsForYear().get(j));
                     }
                 }
             }
@@ -138,9 +138,33 @@ public class StopAndFrisk {
      */
     public double[] friskedVSArrested ( int year ) {
         
-        
+        int countOfPopFrisked = 0;
+        int countOfPopArrested = 0;
 
-        return null; // update the return value
+        int numberOfRecordsForThatYear = 0;
+
+        for (int i = 0; i<database.size(); i++){
+            if (database.get(i).getcurrentYear()==year){
+                numberOfRecordsForThatYear = database.get(i).getRecordsForYear().size();
+                for (int j = 0; j<database.get(i).getRecordsForYear().size(); j++){
+                    if (database.get(i).getRecordsForYear().get(j).getFrisked()){
+                        countOfPopFrisked++;
+                    }
+                    if (database.get(i).getRecordsForYear().get(j).getArrested()){
+                        countOfPopArrested++;
+                    }
+                }                
+            }
+        }
+
+        double percentageOfPopFrisked = (double) countOfPopFrisked/numberOfRecordsForThatYear;
+        double percentageOfPopArrested = (double) countOfPopArrested/numberOfRecordsForThatYear;
+
+        double[] hello = new double[2];
+        hello[0] = percentageOfPopFrisked;
+        hello[1] = percentageOfPopFrisked;
+
+        return hello;
     }
 
     /**
@@ -154,9 +178,50 @@ public class StopAndFrisk {
      */
     public double[][] genderBias ( int year ) {
 
-        // WRITE YOUR CODE HERE
+        int white = 0;
+        int black = 0;
+        int whiteMale = 0;
+        int blackMale = 0;
+        int whiteFemale = 0;
+        int blackFemale = 0;
 
-        return null; // update the return value
+        for (int i = 0; i<database.size(); i++){
+            if(database.get(i).getcurrentYear()==year){
+                for (int j = 0; j<database.get(i).getRecordsForYear().size(); j++){
+                    if (database.get(i).getRecordsForYear().get(j).getRace().equals("W")){
+                        white++;
+                        if(database.get(i).getRecordsForYear().get(j).getGender().equals("M")){
+                            whiteMale++;
+                        }
+                        else if(database.get(i).getRecordsForYear().get(j).getGender().equals("F")){
+                            whiteFemale++;
+                        }
+                    }
+
+                    else if (database.get(i).getRecordsForYear().get(j).getRace().equals("B")){
+                        black++;
+                        if(database.get(i).getRecordsForYear().get(j).getGender().equals("M")){
+                            blackMale++;
+                        }
+                        else if(database.get(i).getRecordsForYear().get(j).getGender().equals("F")){
+                            blackFemale++;
+                        }
+                    }
+                }
+            }
+        }
+
+        double[][] hey = new double[2][3];
+
+        hey[0][0] = (double) (blackFemale/black)*0.5*100;
+        hey[0][1] = (double) (whiteFemale/white)*0.5*100;
+        hey[0][2] = (double) ((blackFemale+whiteFemale)/(black+white))*0.5*100;
+
+        hey[1][0] = (double) (blackMale/black)*0.5*100;
+        hey[1][1] = (double) (whiteMale/white)*0.5*100;
+        hey[1][2] = (double) ((blackMale+whiteMale)/(black+white))*0.5*100;
+
+        return hey; // update the return value
     }
 
     /**
