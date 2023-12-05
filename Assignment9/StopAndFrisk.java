@@ -60,7 +60,7 @@ public class StopAndFrisk {
         StdIn.readLine();       // Reads and discards the header line
 
         // how do we know how many lines in the files
-        while(StdIn.hasNextLine()){
+        while(!StdIn.isEmpty()){
 
             String[] recordEntries = StdIn.readLine().split(","); // splits the line into different things
 
@@ -80,16 +80,22 @@ public class StopAndFrisk {
 
             SFRecord newSFR = new SFRecord(description, arrested, frisked, gender, race, location);
 
-            for (int i = 0; i<database.size(); i++){
-                if (year==database.get(i).getcurrentYear()){
-                    database.get(i).addRecord(newSFR);
+            // to check if it is in the database
+            boolean yearExists = false;
+
+            for (SFYear i : database){
+                if (year==i.getcurrentYear()){
+                    i.addRecord(newSFR);
+                    yearExists = true;
+                    break;
                 }
-                else {
+            }
+
+            if (!(yearExists)) {
                     SFYear newSFY = new SFYear(year);
                     newSFY.addRecord(newSFR);
                     database.add(newSFY);
                 }
-            }
 
             }
         
@@ -108,18 +114,19 @@ public class StopAndFrisk {
     public ArrayList<SFRecord> populationStopped ( int year, String race ) {
         ArrayList<SFRecord> racey = new ArrayList<>();
 
-        for (int i = 0; i<database.size(); i++){
-            int tempy = database.get(i).getcurrentYear();
+        for (SFYear i : database){
             // checks if the year matches with the user inputted year
-            if (tempy==year){
-                for (int j = 0; j<database.get(i).getRecordsForYear().size(); j++){
-                    String tempr = database.get(i).getRecordsForYear().get(j).getRace();
+            if (i.getcurrentYear()==year){
+                // for (int j = 0; j<database.get(i).getRecordsForYear().size(); j++){ 
+                for (SFRecord j : i.getRecordsForYear()){
+                    String tempr = j.getRace();
                     // checks if the race is the same
                     if (tempr.equals(race)){
                         // add the object to the arraylist
-                        racey.add(database.get(i).getRecordsForYear().get(j));
+                        racey.add(j);
                     }
                 }
+            break;
             }
         }
 
@@ -176,7 +183,8 @@ public class StopAndFrisk {
                     if (database.get(i).getRecordsForYear().get(j).getArrested()){
                         countOfPopArrested++;
                     }
-                }                
+                }
+            break;           
             }
         }
 
@@ -184,8 +192,8 @@ public class StopAndFrisk {
         double percentageOfPopArrested = (double) countOfPopArrested/numberOfRecordsForThatYear;
 
         double[] hello = new double[2];
-        hello[0] = percentageOfPopFrisked;
-        hello[1] = percentageOfPopFrisked;
+        hello[0] = percentageOfPopFrisked * 100;
+        hello[1] = percentageOfPopArrested * 100;
 
         return hello;
     }
@@ -231,18 +239,19 @@ public class StopAndFrisk {
                         }
                     }
                 }
+            break;
             }
         }
 
         double[][] hey = new double[2][3];
 
-        hey[0][0] = (double) (blackFemale/black)*0.5*100;
-        hey[0][1] = (double) (whiteFemale/white)*0.5*100;
-        hey[0][2] = (double) ((blackFemale+whiteFemale)/(black+white))*0.5*100;
+        hey[0][0] = (blackFemale / (double) black) * 0.5 * 100;
+        hey[0][1] = (whiteFemale / (double) white) * 0.5 * 100;
+        hey[0][2] = hey[0][0] + hey[0][1];
 
-        hey[1][0] = (double) (blackMale/black)*0.5*100;
-        hey[1][1] = (double) (whiteMale/white)*0.5*100;
-        hey[1][2] = (double) ((blackMale+whiteMale)/(black+white))*0.5*100;
+        hey[1][0] = (blackMale / (double) black) * 0.5 * 100;
+        hey[1][1] = (whiteMale / (double) white) * 0.5 * 100;
+        hey[1][2] = hey[1][0] + hey[1][1];
 
         return hey; // update the return value
     }
@@ -273,33 +282,58 @@ public class StopAndFrisk {
 
         // checking if both years are in database
 
-        if (year1==year2 | !(inDatabase(year1)) | !(inDatabase(year2))){
-            return 0.0;
+        if (year1==year2){
+            return 0.9999999;
+        }
+
+        if (!(inDatabase(year1))){
+            return 0.009;
+        }
+
+        if (!(inDatabase(year2))){
+            return 0.00009;
         }
 
         int countIn1 = 0;
         int countIn2 = 0;
+
+        int TotalIn1 = 0;
+        int TotalIn2 = 0;
         
         for(int i = 0; i<database.size(); i++){
             if (database.get(i).getcurrentYear()==year1){
+                TotalIn1 = database.get(i).getRecordsForYear().size();
                 for (int j = 0; i<database.get(i).getRecordsForYear().size(); j++){
                     if(database.get(i).getRecordsForYear().get(j).getDescription().indexOf(crimeDescription) != -1){
                         countIn1++;
                     }
                 }
-            }
-            if (database.get(i).getcurrentYear()==year2){
-                for (int k = 0; k<database.get(i).getRecordsForYear().size(); k++){
-                    if(database.get(i).getRecordsForYear().get(k).getDescription().indexOf(crimeDescription) != -1){
-                        countIn2++;
-                    }
-                }
+            break;
             }
         }
 
-        double percent = 100.0*(countIn2-countIn1)/countIn1;
+        for(int i = 0; i<database.size(); i++){
+            if (database.get(i).getcurrentYear()==year2){
+                TotalIn2 = database.get(i).getRecordsForYear().size();
+                for (int j = 0; i<database.get(i).getRecordsForYear().size(); j++){
+                    if(database.get(i).getRecordsForYear().get(j).getDescription().indexOf(crimeDescription) != -1){
+                        countIn2++;
+                    }
+                }
+            break;
+            }
+        }
 
-	    return percent; // update the return value
+        if (TotalIn1==0 | TotalIn2==0){
+            return 0.88888;
+        }
+
+        double percent1 = ((double) countIn1/TotalIn1) * 100;
+        double percent2 = ((double) countIn2/TotalIn2) * 100;
+
+        double howsit = percent2 - percent1;
+
+	    return howsit; // update the return value
     }
 
     /**
