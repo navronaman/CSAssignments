@@ -283,15 +283,7 @@ public class StopAndFrisk {
         // checking if both years are in database
 
         if (year1==year2){
-            return 0.9999999;
-        }
-
-        if (!(inDatabase(year1))){
-            return 0.009;
-        }
-
-        if (!(inDatabase(year2))){
-            return 0.00009;
+            return 0.01;
         }
 
         int countIn1 = 0;
@@ -300,11 +292,13 @@ public class StopAndFrisk {
         int TotalIn1 = 0;
         int TotalIn2 = 0;
         
-        for(int i = 0; i<database.size(); i++){
-            if (database.get(i).getcurrentYear()==year1){
-                TotalIn1 = database.get(i).getRecordsForYear().size();
-                for (int j = 0; i<database.get(i).getRecordsForYear().size(); j++){
-                    if(database.get(i).getRecordsForYear().get(j).getDescription().indexOf(crimeDescription) != -1){
+        // for(int i = 0; i<database.size(); i++){
+        for (SFYear i : database){
+            if (i.getcurrentYear()==year1){
+                TotalIn1 = i.getRecordsForYear().size();
+                // for (int j = 0; i<database.get(i).getRecordsForYear().size(); j++){
+                for (SFRecord j : i.getRecordsForYear()){
+                    if(j.getDescription().indexOf(crimeDescription) != -1){
                         countIn1++;
                     }
                 }
@@ -312,11 +306,12 @@ public class StopAndFrisk {
             }
         }
 
-        for(int i = 0; i<database.size(); i++){
-            if (database.get(i).getcurrentYear()==year2){
-                TotalIn2 = database.get(i).getRecordsForYear().size();
-                for (int j = 0; i<database.get(i).getRecordsForYear().size(); j++){
-                    if(database.get(i).getRecordsForYear().get(j).getDescription().indexOf(crimeDescription) != -1){
+        for (SFYear i : database){
+            if (i.getcurrentYear()==year2){
+                TotalIn2 = i.getRecordsForYear().size();
+                // for (int j = 0; i<database.get(i).getRecordsForYear().size(); j++){
+                for (SFRecord j : i.getRecordsForYear()){
+                    if(j.getDescription().indexOf(crimeDescription) != -1){
                         countIn2++;
                     }
                 }
@@ -325,7 +320,7 @@ public class StopAndFrisk {
         }
 
         if (TotalIn1==0 | TotalIn2==0){
-            return 0.88888;
+            return 0.0;
         }
 
         double percent1 = ((double) countIn1/TotalIn1) * 100;
